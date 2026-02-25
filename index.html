@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Builder - Tạo CV chuyên nghiệp</title>
+  <meta name="description" content="Công cụ tạo CV chuyên nghiệp với 5 mẫu đẹp, xuất PDF, lưu tự động.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/templates.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+
+  <div class="app-shell">
+    <!-- Mobile tab switcher (hidden on desktop via CSS) -->
+    <div class="mobile-tab-bar">
+      <button class="mobile-tab active" id="tab-form" onclick="switchMobileTab('form')">&#9998; Nhập liệu</button>
+      <button class="mobile-tab" id="tab-preview" onclick="switchMobileTab('preview')">&#128065; Xem CV</button>
+    </div>
+    <!-- ╔══════════════════════════════════════════╗ -->
+    <!-- ║           FORM PANEL (Left)              ║ -->
+    <!-- ╚══════════════════════════════════════════╝ -->
+    <aside class="form-panel" id="panel-form">
+      <!-- Header -->
+      <div class="form-panel-header">
+        <div class="logo">
+          <div class="logo-icon">📄</div>
+          <span class="logo-text">CV Builder</span>
+        </div>
+        <div class="logo-sub">Tạo CV chuyên nghiệp • 5 mẫu đẹp • Xuất PDF</div>
+      </div>
+
+      <!-- Template Switcher -->
+      <div class="template-switcher">
+        <div class="template-switcher-label">Chọn mẫu CV</div>
+        <div class="template-thumbs">
+          <div class="template-thumb active" data-template="1">
+            <div class="template-thumb-inner t-thumb-1"></div>
+            <div class="template-thumb-label">Classic</div>
+          </div>
+          <div class="template-thumb" data-template="2">
+            <div class="template-thumb-inner t-thumb-2"></div>
+            <div class="template-thumb-label">Modern</div>
+          </div>
+          <div class="template-thumb" data-template="3">
+            <div class="template-thumb-inner t-thumb-3"></div>
+            <div class="template-thumb-label">Pro</div>
+          </div>
+          <div class="template-thumb" data-template="4">
+            <div class="template-thumb-inner t-thumb-4"></div>
+            <div class="template-thumb-label">Creative</div>
+          </div>
+          <div class="template-thumb" data-template="5">
+            <div class="template-thumb-inner t-thumb-5"></div>
+            <div class="template-thumb-label">Executive</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Color Customizer -->
+      <div class="color-customizer">
+        <div class="color-customizer-label">
+          <span>Màu chủ đề mẫu này</span>
+          <button id="color-reset-btn" class="color-reset-btn" title="Reset về màu mặc định">↺ Reset</button>
+        </div>
+        <div class="color-picker-row">
+          <input type="color" id="template-color-picker" class="color-picker-input" value="#2c3e50">
+          <div class="color-swatches">
+            <!-- Preset colors cho nhanh -->
+            <div class="color-swatch" data-color="#2c3e50" style="background:#2c3e50" title="Dark Slate"></div>
+            <div class="color-swatch" data-color="#1a73e8" style="background:#1a73e8" title="Google Blue"></div>
+            <div class="color-swatch" data-color="#e53935" style="background:#e53935" title="Red"></div>
+            <div class="color-swatch" data-color="#388e3c" style="background:#388e3c" title="Green"></div>
+            <div class="color-swatch" data-color="#6c63ff" style="background:#6c63ff" title="Purple"></div>
+            <div class="color-swatch" data-color="#f57c00" style="background:#f57c00" title="Orange"></div>
+            <div class="color-swatch" data-color="#00838f" style="background:#00838f" title="Teal"></div>
+            <div class="color-swatch" data-color="#c9a84c" style="background:#c9a84c" title="Gold"></div>
+            <div class="color-swatch" data-color="#ad1457" style="background:#ad1457" title="Pink"></div>
+            <div class="color-swatch" data-color="#1b5e20" style="background:#1b5e20" title="Forest"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-bar">
+        <button class="btn btn-primary" id="btn-export">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+          </svg>
+          Xuất PDF
+        </button>
+        <button class="btn btn-ghost" id="btn-clear" title="Xóa toàn bộ dữ liệu">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+          </svg>
+          Xóa
+        </button>
+      </div>
+
+      <!-- ── Scrollable form sections ───────────── -->
+      <div class="form-panel-scroll">
+
+        <!-- 1. Thông tin cá nhân -->
+        <div class="form-section open">
+          <div class="form-section-header" onclick="this.closest('.form-section').classList.toggle('open')">
+            <div class="form-section-title">
+              <span class="section-icon">👤</span>
+              Thông tin cá nhân
+            </div>
+            <span class="section-chevron">▼</span>
+          </div>
+          <div class="form-section-body">
+            <!-- Avatar -->
+            <div class="form-group" style="margin-bottom:14px;">
+              <label>Ảnh đại diện</label>
+              <div class="avatar-dropzone" id="avatar-dropzone">
+                <div id="drop-text">
+                  <div class="drop-icon">📷</div>
+                  <span>Click hoặc kéo thả ảnh vào đây</span>
+                  <span style="font-size:10px;opacity:0.6">JPG, PNG, WEBP</span>
+                </div>
+                <img id="avatar-preview" alt="Preview">
+                <button id="avatar-remove" title="Xóa ảnh">✕</button>
+                <input type="file" id="avatar-input" accept="image/*" style="display:none">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Họ và tên *</label>
+                <input type="text" id="p_name" placeholder="Nguyễn Văn A">
+              </div>
+              <div class="form-group">
+                <label>Chức danh / Vị trí</label>
+                <input type="text" id="p_title" placeholder="Software Engineer">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="p_email" placeholder="example@gmail.com">
+              </div>
+              <div class="form-group">
+                <label>Số điện thoại</label>
+                <input type="tel" id="p_phone" placeholder="0912 345 678">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Địa chỉ</label>
+                <input type="text" id="p_address" placeholder="TP. Hồ Chí Minh">
+              </div>
+              <div class="form-group">
+                <label>Ngày sinh</label>
+                <input type="text" id="p_dob" placeholder="01/01/2000">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>LinkedIn / Website</label>
+              <input type="text" id="p_linkedin" placeholder="linkedin.com/in/yourname">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Mục tiêu nghề nghiệp -->
+        <div class="form-section open">
+          <div class="form-section-header" onclick="this.closest('.form-section').classList.toggle('open')">
+            <div class="form-section-title">
+              <span class="section-icon">🎯</span>
+              Mục tiêu nghề nghiệp
+            </div>
+            <span class="section-chevron">▼</span>
+          </div>
+          <div class="form-section-body">
+            <div class="form-group">
+              <label>Giới thiệu bản thân & mục tiêu</label>
+              <textarea id="objective" rows="5" placeholder="Tôi là sinh viên năm cuối chuyên ngành... Mục tiêu của tôi là...
+Mỗi dòng xuống dòng sẽ tạo paragraph mới."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Kinh nghiệm làm việc -->
+        <div class="form-section open">
+          <div class="form-section-header" onclick="this.closest('.form-section').classList.toggle('open')">
+            <div class="form-section-title">
+              <span class="section-icon">💼</span>
+              Kinh nghiệm làm việc
+            </div>
+            <span class="section-chevron">▼</span>
+          </div>
+          <div class="form-section-body">
+            <div id="exp-list"></div>
+            <button class="btn-add-item" data-add="experience">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              Thêm kinh nghiệm
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Giáo dục -->
+        <div class="form-section open">
+          <div class="form-section-header" onclick="this.closest('.form-section').classList.toggle('open')">
+            <div class="form-section-title">
+              <span class="section-icon">🎓</span>
+              Học vấn & Giáo dục
+            </div>
+            <span class="section-chevron">▼</span>
+          </div>
+          <div class="form-section-body">
+            <div id="edu-list"></div>
+            <button class="btn-add-item" data-add="education">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              Thêm học vấn
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. Kỹ năng -->
+        <div class="form-section open">
+          <div class="form-section-header" onclick="this.closest('.form-section').classList.toggle('open')">
+            <div class="form-section-title">
+              <span class="section-icon">⚡</span>
+              Kỹ năng
+            </div>
+            <span class="section-chevron">▼</span>
+          </div>
+          <div class="form-section-body">
+            <div id="skill-list"></div>
+            <button class="btn-add-item" data-add="skills">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              Thêm kỹ năng
+            </button>
+          </div>
+        </div>
+
+        <!-- 6. Chứng chỉ & Bằng cấp -->
+        <div class="form-section">
+          <div class="form-section-header" onclick="this.closest('.form-section').classList.toggle('open')">
+            <div class="form-section-title">
+              <span class="section-icon">🏆</span>
+              Chứng chỉ & Bằng cấp
+            </div>
+            <span class="section-chevron">▼</span>
+          </div>
+          <div class="form-section-body">
+            <div id="cert-list"></div>
+            <button class="btn-add-item" data-add="certificates">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              Thêm chứng chỉ
+            </button>
+          </div>
+        </div>
+
+        <!-- 7. Hoạt động -->
+        <div class="form-section">
+          <div class="form-section-header" onclick="this.closest('.form-section').classList.toggle('open')">
+            <div class="form-section-title">
+              <span class="section-icon">🌟</span>
+              Hoạt động & Tình nguyện
+            </div>
+            <span class="section-chevron">▼</span>
+          </div>
+          <div class="form-section-body">
+            <div id="act-list"></div>
+            <button class="btn-add-item" data-add="activities">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              Thêm hoạt động
+            </button>
+          </div>
+        </div>
+
+        <!-- 8. Nghiên cứu khoa học -->
+        <div class="form-section">
+          <div class="form-section-header" onclick="this.closest('.form-section').classList.toggle('open')">
+            <div class="form-section-title">
+              <span class="section-icon">&#128300;</span>
+              Nghiên cứu khoa học
+            </div>
+            <span class="section-chevron">▼</span>
+          </div>
+          <div class="form-section-body">
+            <div id="research-list"></div>
+            <button class="btn-add-item" data-add="research">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              Thêm đề tài nghiên cứu
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /form-panel-scroll -->
+    </aside>
+
+    <!-- ╔══════════════════════════════════════════╗ -->
+    <!-- ║          PREVIEW PANEL (Right)           ║ -->
+    <!-- ╚══════════════════════════════════════════╝ -->
+    <main class="preview-panel" id="panel-preview">
+      <div class="preview-topbar">
+        <span class="preview-label">Preview CV</span>
+        <span class="preview-size-badge">A4 • 794 × 1123px</span>
+      </div>
+      <div class="preview-scroll">
+        <div id="cv-preview">
+          <!-- Rendered by Templates.render() -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/pdf.js"></script>
+  <script src="js/templates.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
